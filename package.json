@@ -27,6 +27,7 @@
     "awesome-typescript-loader": "^5.0.0",
     "bip39": "^2.5.0",
     "bs58check": "^2.1.1",
+    "electron-fetch": "^1.1.0",
     "https": "^1.0.0",
     "libsodium-wrappers": "^0.5.4",
     "libsodium-wrappers-sumo": "^0.5.4",

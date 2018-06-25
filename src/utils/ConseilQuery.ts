@@ -1,5 +1,5 @@
 import * as querystring from "querystring";
-import fetch from 'node-fetch';
+import fetch from 'electron-fetch';
 import {TezosFilter} from "..";
 
 /**
@@ -36,7 +36,7 @@ export function queryConseilServer(network: string, route: string, customUrl = '
             "apiKey": "hooman"
         }
     })
-        .then(response => {return response.json()});
+    .then(res => {return res.json()});
 }
 
 /**

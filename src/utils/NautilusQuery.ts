@@ -1,4 +1,4 @@
-import fetch, {Response} from 'node-fetch';
+import fetch from 'electron-fetch';
 
 /**
  * Generic functions for running queries against blockchain nodes.
@@ -41,11 +41,12 @@ export function runGetQuery(network: string, command: string, customNode = ''): 
     return fetch(url, {
         method: 'get',
     })
-        .then(response => {return response.json()})
-        .then(json => {
-            console.log(`Reponse from Tezos node: ${JSON.stringify(json)}`);
-            return new Promise<Object>(resolve => resolve(json))
-        })
+    .then(res => res.json());
+        // .then(response => {return response.json()})
+        // .then(json => {
+        //     console.log(`Reponse from Tezos node: ${JSON.stringify(json)}`);
+        //     return new Promise<Object>(resolve => resolve(json))
+        // })
 }
 
 /**
@@ -67,5 +68,5 @@ export function runPostQuery(network: string, command: string, payload = {}, cus
         headers: {
             'content-type': 'application/json'
         }
-    })
+    });
 }
