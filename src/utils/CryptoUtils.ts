@@ -129,7 +129,7 @@ export function getSeedFromMnemonicAndPassphrase(
     mnemonic: string,
     passphrase: string): Error | string {
     const lengthOfMnemonic = mnemonic.split(" ").length;
-    if (lengthOfMnemonic !== 15) return {error: "The mnemonic should be 15 words."};
+    if (lengthOfMnemonic !== (15 || 24)) return {error: "The mnemonic should be 15 or 24 words."};
     if (!bip39.validateMnemonic(mnemonic)) return {error: "The given mnemonic could not be validated."};
     return bip39.mnemonicToSeed(mnemonic, passphrase).slice(0, 32);
 }
@@ -175,7 +175,7 @@ export function getKeysFromSeed(
  */
 export function getKeysFromMnemonicAndPassphrase(
     mnemonic: string,
-    passphrase: string,
+    passphrase: string = '',
     pkh = '',
     checkPKH = true,
     storeType: StoreType,
