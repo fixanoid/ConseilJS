@@ -119,6 +119,51 @@ export function base58CheckDecode(s: string, prefix: string): Buffer {
 }
 
 /**
+ * Generates seed from a user-supplied mnemonic and passphrase.
+ * Helper function to getKeysFromMnemonicAndPassphrase.
+ * @param mnemonic Fifteen word mnemonic phrase from fundraiser PDF
+ * @param passphrase User-supplied passphrase
+ * @returns KeyStore Generated keys
+ */
+export function getSeedFromMnemonicAndPassphrase(
+    mnemonic: string,
+    passphrase: string): Error | string {
+    const lengthOfMnemonic = mnemonic.split(" ").length;
+    if (lengthOfMnemonic !== 15) return {error: "The mnemonic should be 15 words."};
+    if (!bip39.validateMnemonic(mnemonic)) return {error: "The given mnemonic could not be validated."};
+    return bip39.mnemonicToSeed(mnemonic, passphrase).slice(0, 32);
+}
+
+/**
+ * Generates keys, given a seed. Helper function to getKeysFromMnemonicAndPassphrase.
+ * @param seed Seed generated from user given mnemonic and passphrase.
+ * @param {string} pkh  The public key hash supposedly produced by the given mnemonic and passphrase
+ * @param {boolean} checkPKH Check whether presumed public key hash matches the actual public key hash
+ * @param {StoreType} storeType   Type of the generated key store
+ * @returns {KeyStore}  Generated keys
+ */
+export function getKeysFromSeed(
+    seed: string,
+    pkh: string,
+    checkPKH: boolean,
+    storeType: StoreType): Error | KeyStore {
+    const nonce = "";
+    const key_pair = sodium.crypto_sign_seed_keypair(seed, nonce);
+    const privateKey = base58CheckEncode(key_pair.privateKey, "edsk");
+    const publicKey = base58CheckEncode(key_pair.publicKey, "edpk");
+    const publicKeyHash = base58CheckEncode(sodium.crypto_generichash(20, key_pair.publicKey), "tz1");
+    if(checkPKH && publicKeyHash != pkh) return {error: "The given mnemonic and passphrase do not correspond to the applied public key hash"};
+    return {
+        publicKey,
+        privateKey,
+        publicKeyHash,
+        seed,
+        storeType
+    }
+}
+
+
+/**
  * Generates keys from a user-supplied mnemonic and passphrase.
  * @param {string} mnemonic Fifteen word mnemonic phrase from fundraiser PDF.
  * @param {string} passphrase   User-supplied passphrase
@@ -133,23 +178,14 @@ export function getKeysFromMnemonicAndPassphrase(
     pkh = '',
     checkPKH = true,
     storeType: StoreType): Error | KeyStore {
-    const lengthOfMnemonic = mnemonic.split(" ").length;
-    if (lengthOfMnemonic !== 15) return {error: "The mnemonic should be 15 words."};
-    if(!bip39.validateMnemonic(mnemonic)) return {error: "The given mnemonic could not be validated."};
-    const seed = bip39.mnemonicToSeed(mnemonic, passphrase).slice(0, 32);
-    const nonce = "";
-    const key_pair = sodium.crypto_sign_seed_keypair(seed, nonce);
-    const privateKey = base58CheckEncode(key_pair.privateKey, "edsk");
-    const publicKey = base58CheckEncode(key_pair.publicKey, "edpk");
-    const publicKeyHash = base58CheckEncode(sodium.crypto_generichash(20, key_pair.publicKey), "tz1");
-    if(checkPKH && publicKeyHash != pkh) return {error: "The given mnemonic and passphrase do not correspond to the applied public key hash"};
-    return {
-        publicKey,
-        privateKey,
-        publicKeyHash,
-        seed,
-        storeType
-    }
+    const seedOrError = getSeedFromMnemonicAndPassphrase(mnemonic, passphrase);
+    if (seedOrError instanceof Error)
+        return (<Error> seedOrError);
+    const seed = <string> seedOrError;
+    const keysOrError = getKeysFromSeed(seed, pkh, checkPKH, storeType);
+    if (keysOrError instanceof Error)
+        return (<Error> keysOrError);
+    return <KeyStore> keysOrError
 }
 
 /**
