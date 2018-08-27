@@ -170,6 +170,7 @@ export function getKeysFromSeed(
  * @param {string} pkh  The public key hash supposedly produced by the given mnemonic and passphrase
  * @param {boolean} checkPKH Check whether presumed public key hash matches the actual public key hash
  * @param {StoreType} storeType   Type of the generated key store
+ * @param {string} derivationPath BIP32 Derivation Path
  * @returns {KeyStore}  Generated keys
  */
 export function getKeysFromMnemonicAndPassphrase(
@@ -177,7 +178,8 @@ export function getKeysFromMnemonicAndPassphrase(
     passphrase: string,
     pkh = '',
     checkPKH = true,
-    storeType: StoreType): Error | KeyStore {
+    storeType: StoreType,
+    derivationPath: string = "44'/1729'/0'/0/0"): Error | KeyStore {
     const seedOrError = getSeedFromMnemonicAndPassphrase(mnemonic, passphrase);
     if (seedOrError instanceof Error)
         return (<Error> seedOrError);
