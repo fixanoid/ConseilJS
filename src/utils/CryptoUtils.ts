@@ -135,20 +135,37 @@ export function getSeedFromMnemonicAndPassphrase(
 }
 
 /**
+ * Temporary helper function to get address based off of BIP32 protocol
+ * @param {string} seed Seed generated from user given mnemonic and passphrase.
+ * @param {string} derivationPath BIP32 Derivation Path
+ * @param {string} nonce Incrementing suffix for BIP32 address
+ */
+export function generateBIP32Address(
+    seed: string,
+    derivationPath: string,
+    nonce: string) {
+    const address = derivationPath + '/' + nonce;
+    return sodium.crypto_sign_seed_keypair(seed, address)
+}
+
+
+/**
  * Generates keys, given a seed. Helper function to getKeysFromMnemonicAndPassphrase.
- * @param seed Seed generated from user given mnemonic and passphrase.
+ * @param {string} Seed generated from user given mnemonic and passphrase.
  * @param {string} pkh  The public key hash supposedly produced by the given mnemonic and passphrase
  * @param {boolean} checkPKH Check whether presumed public key hash matches the actual public key hash
  * @param {StoreType} storeType   Type of the generated key store
+ * @param {string} derivationPath BIP32 Derivation Path
  * @returns {KeyStore}  Generated keys
  */
 export function getKeysFromSeed(
     seed: string,
     pkh: string,
     checkPKH: boolean,
-    storeType: StoreType): Error | KeyStore {
-    const nonce = "";
-    const key_pair = sodium.crypto_sign_seed_keypair(seed, nonce);
+    storeType: StoreType,
+    derivationPath: string): Error | KeyStore {
+    const nonce = "0";
+    const key_pair = generateBIP32Address(seed, derivationPath, nonce)
     const privateKey = base58CheckEncode(key_pair.privateKey, "edsk");
     const publicKey = base58CheckEncode(key_pair.publicKey, "edpk");
     const publicKeyHash = base58CheckEncode(sodium.crypto_generichash(20, key_pair.publicKey), "tz1");
@@ -179,12 +196,12 @@ export function getKeysFromMnemonicAndPassphrase(
     pkh = '',
     checkPKH = true,
     storeType: StoreType,
-    derivationPath: string = "44'/1729'/0'/0/0"): Error | KeyStore {
+    derivationPath: string = "44'/1729'/0'/0"): Error | KeyStore {
     const seedOrError = getSeedFromMnemonicAndPassphrase(mnemonic, passphrase);
     if (seedOrError instanceof Error)
         return (<Error> seedOrError);
     const seed = <string> seedOrError;
-    const keysOrError = getKeysFromSeed(seed, pkh, checkPKH, storeType);
+    const keysOrError = getKeysFromSeed(seed, pkh, checkPKH, storeType, derivationPath);
     if (keysOrError instanceof Error)
         return (<Error> keysOrError);
     return <KeyStore> keysOrError
