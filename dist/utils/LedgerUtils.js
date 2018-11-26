@@ -41,6 +41,7 @@ class TransportInstance {
     }
 }
 TransportInstance.transport = null;
+TransportInstance.isIssue = true;
 /**
     initialize of transport
 */
@@ -74,7 +75,7 @@ exports.getTezosPublicKey = getTezosPublicKey;
  */
 function getTezosPublicKeyOnHidden(derivationPath, device) {
     return __awaiter(this, void 0, void 0, function* () {
-        // let transport;
+        let transport;
         // if (TransportInstance.transport) {
         //     transport = new Transport(new HID.HID(device));
         //     TransportInstance.transport = transport;
@@ -82,13 +83,26 @@ function getTezosPublicKeyOnHidden(derivationPath, device) {
         //     transport = await TransportInstance.getInstance();
         // }
         // const transport: any = await TransportInstance.getInstance();
-        const transport = new Transport(new node_hid_1.default.HID(device));
+        if (TransportInstance.isIssue) {
+            transport = new Transport(new node_hid_1.default.HID(device));
+        }
+        else {
+            transport = TransportInstance.transport;
+        }
+        // const transport = new Transport(new HID.HID(device));
         // TransportInstance.transport = transport;
         const xtz = new App(transport);
-        const result = yield xtz.getAddress(derivationPath, false);
-        const hexEncodedPublicKey = result.publicKey;
-        TransportInstance.transport = null;
-        return hexEncodedPublicKey;
+        const result = yield xtz.getAddress(derivationPath, false).catch(() => {
+            TransportInstance.isIssue = true;
+            return null;
+        });
+        if (result && result.publicKey) {
+            TransportInstance.isIssue = false;
+            TransportInstance.transport = transport;
+            const hexEncodedPublicKey = result.publicKey;
+            return hexEncodedPublicKey;
+        }
+        return '';
     });
 }
 exports.getTezosPublicKeyOnHidden = getTezosPublicKeyOnHidden;

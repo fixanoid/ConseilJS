@@ -14,6 +14,7 @@ let App = require("basil-tezos-ledger").default;
  */
 class TransportInstance {
     static transport = null;
+    static isIssue = true;
     static async getInstance() {
         if (this.transport === null) {
             this.transport = await Transport.create();
@@ -52,7 +53,7 @@ export async function getTezosPublicKey(derivationPath: string): Promise<string>
  * @param derivationPath BIP44 Derivation Path
  */
 export async function getTezosPublicKeyOnHidden(derivationPath: string, device): Promise<string> {
-    // let transport;
+    let transport;
     // if (TransportInstance.transport) {
     //     transport = new Transport(new HID.HID(device));
     //     TransportInstance.transport = transport;
@@ -60,13 +61,25 @@ export async function getTezosPublicKeyOnHidden(derivationPath: string, device):
     //     transport = await TransportInstance.getInstance();
     // }
     // const transport: any = await TransportInstance.getInstance();
-    const transport = new Transport(new HID.HID(device));
+    if (TransportInstance.isIssue) {
+        transport = new Transport(new HID.HID(device));
+    } else {
+        transport = TransportInstance.transport;
+    }
+    // const transport = new Transport(new HID.HID(device));
     // TransportInstance.transport = transport;
     const xtz = new App(transport);
-    const result = await xtz.getAddress(derivationPath, false);
-    const hexEncodedPublicKey = result.publicKey;
-    TransportInstance.transport = null;
-    return hexEncodedPublicKey;
+    const result = await xtz.getAddress(derivationPath, false).catch(() => {
+        TransportInstance.isIssue = true;
+        return null;
+    });
+    if (result && result.publicKey) {
+        TransportInstance.isIssue = false;
+        TransportInstance.transport = transport;
+        const hexEncodedPublicKey = result.publicKey;
+        return hexEncodedPublicKey;
+    }
+    return '';    
 }
 
 /**
