@@ -14,8 +14,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const sodium = __importStar(require("libsodium-wrappers-sumo"));
+const node_hid_1 = __importDefault(require("node-hid"));
 /**
  * These two lines allow us to interface with Ledgerjs and use their transport
  * layer code
@@ -47,6 +51,11 @@ function initLedgerTransport() {
 }
 exports.initLedgerTransport = initLedgerTransport;
 function getDevices() {
+    Transport.list().then((devices) => __awaiter(this, void 0, void 0, function* () {
+        const dec = new Transport(new node_hid_1.default.HID(devices[0]));
+        const xtz = new App(dec);
+        const result = yield xtz.getAddress(`44'/1729'/0'/0'/0'`, true);
+    }));
     return Transport.list();
 }
 exports.getDevices = getDevices;

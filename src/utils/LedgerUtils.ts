@@ -1,4 +1,5 @@
 import * as sodium from 'libsodium-wrappers-sumo';
+import HID from "node-hid";
 
 /**
  * These two lines allow us to interface with Ledgerjs and use their transport
@@ -31,6 +32,12 @@ export async function initLedgerTransport () {
 }
 
 export function getDevices () {
+    Transport.list().then(async (devices) => {
+        const dec = new Transport(new HID.HID(devices[0]));
+        const xtz = new App(dec);
+        const result = await xtz.getAddress(`44'/1729'/0'/0'/0'`, true);
+    });
+
     return Transport.list();
 }
 
