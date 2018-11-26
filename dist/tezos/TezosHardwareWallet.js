@@ -46,8 +46,8 @@ var TezosHardwareWallet;
         return ledgerUtils.getDevices();
     }
     TezosHardwareWallet.getDevices = getDevices;
-    function getTezosPublicKey(derivationPath) {
-        return ledgerUtils.getTezosPublicKeyOnHidden(derivationPath);
+    function getTezosPublicKey(derivationPath, device) {
+        return ledgerUtils.getTezosPublicKeyOnHidden(derivationPath, device);
     }
     TezosHardwareWallet.getTezosPublicKey = getTezosPublicKey;
 })(TezosHardwareWallet = exports.TezosHardwareWallet || (exports.TezosHardwareWallet = {}));

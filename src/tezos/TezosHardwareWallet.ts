@@ -29,7 +29,7 @@ export namespace TezosHardwareWallet {
         return ledgerUtils.getDevices();
     }
 
-    export function getTezosPublicKey(derivationPath) {
-        return ledgerUtils.getTezosPublicKeyOnHidden(derivationPath);
+    export function getTezosPublicKey(derivationPath, device) {
+        return ledgerUtils.getTezosPublicKeyOnHidden(derivationPath, device);
     }
 }

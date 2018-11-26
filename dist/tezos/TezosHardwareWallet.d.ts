@@ -4,5 +4,5 @@ export declare namespace TezosHardwareWallet {
     function unlockAddress(deviceType: HardwareDeviceType, derivationPath: string): Promise<KeyStore>;
     function initLedgerTransport(): void;
     function getDevices(): any;
-    function getTezosPublicKey(derivationPath: any): Promise<string>;
+    function getTezosPublicKey(derivationPath: any, device: any): Promise<string>;
 }

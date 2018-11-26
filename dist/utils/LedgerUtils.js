@@ -14,8 +14,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const sodium = __importStar(require("libsodium-wrappers-sumo"));
+const node_hid_1 = __importDefault(require("node-hid"));
 /**
  * These two lines allow us to interface with Ledgerjs and use their transport
  * layer code
@@ -30,18 +34,13 @@ class TransportInstance {
     static getInstance() {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.transport === null) {
-                return Transport.create().then((transport) => {
-                    console.log('8888888', transport);
-                    this.transport = transport;
-                    return this.transport;
-                });
+                this.transport = yield Transport.create();
             }
             return this.transport;
         });
     }
 }
 TransportInstance.transport = null;
-TransportInstance.transports = [];
 /**
     initialize of transport
 */
@@ -73,9 +72,16 @@ exports.getTezosPublicKey = getTezosPublicKey;
  * Given a BIP44 derivation path for Tezos, get the Tezos Public Key
  * @param derivationPath BIP44 Derivation Path
  */
-function getTezosPublicKeyOnHidden(derivationPath) {
+function getTezosPublicKeyOnHidden(derivationPath, device) {
     return __awaiter(this, void 0, void 0, function* () {
-        const transport = yield TransportInstance.getInstance();
+        let transport;
+        if (TransportInstance.transport) {
+            TransportInstance.transport = new Transport(new node_hid_1.default.HID(device));
+            transport = TransportInstance.transport;
+        }
+        else {
+            transport = yield TransportInstance.getInstance();
+        }
         const xtz = new App(transport);
         const result = yield xtz.getAddress(derivationPath, false);
         const hexEncodedPublicKey = result.publicKey;
