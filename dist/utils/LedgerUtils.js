@@ -41,9 +41,15 @@ TransportInstance.transport = null;
     initialize of transport
 */
 function initLedgerTransport() {
-    TransportInstance.transport = null;
+    return __awaiter(this, void 0, void 0, function* () {
+        TransportInstance.transport = null;
+    });
 }
 exports.initLedgerTransport = initLedgerTransport;
+function getDevices() {
+    return Transport.list();
+}
+exports.getDevices = getDevices;
 /**
  * Given a BIP44 derivation path for Tezos, get the Tezos Public Key
  * @param derivationPath BIP44 Derivation Path

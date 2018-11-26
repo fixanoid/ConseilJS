@@ -26,8 +26,12 @@ class TransportInstance {
     initialize of transport
 */
 
-export function initLedgerTransport () {
-    TransportInstance.transport = null;
+export async function initLedgerTransport () {
+    TransportInstance.transport = null;  
+}
+
+export function getDevices () {
+    return Transport.list();
 }
 
 /**

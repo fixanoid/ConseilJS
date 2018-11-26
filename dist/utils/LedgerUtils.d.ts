@@ -2,7 +2,8 @@
 /**
     initialize of transport
 */
-export declare function initLedgerTransport(): void;
+export declare function initLedgerTransport(): Promise<void>;
+export declare function getDevices(): any;
 /**
  * Given a BIP44 derivation path for Tezos, get the Tezos Public Key
  * @param derivationPath BIP44 Derivation Path

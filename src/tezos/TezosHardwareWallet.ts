@@ -25,6 +25,10 @@ export namespace TezosHardwareWallet {
         ledgerUtils.initLedgerTransport();
     }
 
+    export function getDevices() {
+        return ledgerUtils.getDevices();
+    }
+
     export function getTezosPublicKey(derivationPath) {
         return ledgerUtils.getTezosPublicKeyOnHidden(derivationPath);
     }
