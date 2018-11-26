@@ -25,6 +25,10 @@ export namespace TezosHardwareWallet {
         ledgerUtils.initLedgerTransport();
     }
 
+    export function setIssue() {
+        ledgerUtils.onSetIssue();
+    }
+
     export function getDevices() {
         return ledgerUtils.getDevices();
     }

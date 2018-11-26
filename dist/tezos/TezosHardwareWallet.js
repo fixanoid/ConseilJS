@@ -42,6 +42,10 @@ var TezosHardwareWallet;
         ledgerUtils.initLedgerTransport();
     }
     TezosHardwareWallet.initLedgerTransport = initLedgerTransport;
+    function setIssue() {
+        ledgerUtils.onSetIssue();
+    }
+    TezosHardwareWallet.setIssue = setIssue;
     function getDevices() {
         return ledgerUtils.getDevices();
     }

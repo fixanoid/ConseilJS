@@ -55,6 +55,12 @@ function getDevices() {
     return Transport.list();
 }
 exports.getDevices = getDevices;
+function onSetIssue() {
+    return __awaiter(this, void 0, void 0, function* () {
+        TransportInstance.isIssue = true;
+    });
+}
+exports.onSetIssue = onSetIssue;
 /**
  * Given a BIP44 derivation path for Tezos, get the Tezos Public Key
  * @param derivationPath BIP44 Derivation Path
@@ -76,24 +82,14 @@ exports.getTezosPublicKey = getTezosPublicKey;
 function getTezosPublicKeyOnHidden(derivationPath, device) {
     return __awaiter(this, void 0, void 0, function* () {
         let transport;
-        // if (TransportInstance.transport) {
-        //     transport = new Transport(new HID.HID(device));
-        //     TransportInstance.transport = transport;
-        // } else {
-        //     transport = await TransportInstance.getInstance();
-        // }
-        // const transport: any = await TransportInstance.getInstance();
         if (TransportInstance.isIssue) {
             transport = new Transport(new node_hid_1.default.HID(device));
         }
         else {
             transport = TransportInstance.transport;
         }
-        // const transport = new Transport(new HID.HID(device));
-        // TransportInstance.transport = transport;
         const xtz = new App(transport);
         const result = yield xtz.getAddress(derivationPath, false).catch(() => {
-            TransportInstance.isIssue = true;
             return null;
         });
         if (result && result.publicKey) {
