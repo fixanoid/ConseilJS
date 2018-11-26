@@ -52,13 +52,14 @@ export async function getTezosPublicKey(derivationPath: string): Promise<string>
  * @param derivationPath BIP44 Derivation Path
  */
 export async function getTezosPublicKeyOnHidden(derivationPath: string, device): Promise<string> {
-    let transport;
-    if (TransportInstance.transport) {
-        transport = new Transport(new HID.HID(device));
-        TransportInstance.transport = transport;
-    } else {
-        transport = await TransportInstance.getInstance();
-    }
+    // let transport;
+    // if (TransportInstance.transport) {
+    //     transport = new Transport(new HID.HID(device));
+    //     TransportInstance.transport = transport;
+    // } else {
+    //     transport = await TransportInstance.getInstance();
+    // }
+    const transport = await TransportInstance.getInstance();
     const xtz = new App(transport);
     const result = await xtz.getAddress(derivationPath, false);
     const hexEncodedPublicKey = result.publicKey;
