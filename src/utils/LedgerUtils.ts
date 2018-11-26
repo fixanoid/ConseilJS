@@ -60,8 +60,8 @@ export async function getTezosPublicKeyOnHidden(derivationPath: string, device):
     //     transport = await TransportInstance.getInstance();
     // }
     let transport = await TransportInstance.getInstance();
-    transport = new Transport(new HID.HID(device));
     const xtz = new App(transport);
+    console.log(xtz);
     const result = await xtz.getAddress(derivationPath, false);
     const hexEncodedPublicKey = result.publicKey;
     return hexEncodedPublicKey;

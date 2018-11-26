@@ -14,12 +14,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const sodium = __importStar(require("libsodium-wrappers-sumo"));
-const node_hid_1 = __importDefault(require("node-hid"));
 /**
  * These two lines allow us to interface with Ledgerjs and use their transport
  * layer code
@@ -82,8 +78,8 @@ function getTezosPublicKeyOnHidden(derivationPath, device) {
         //     transport = await TransportInstance.getInstance();
         // }
         let transport = yield TransportInstance.getInstance();
-        transport = new Transport(new node_hid_1.default.HID(device));
         const xtz = new App(transport);
+        console.log(xtz);
         const result = yield xtz.getAddress(derivationPath, false);
         const hexEncodedPublicKey = result.publicKey;
         return hexEncodedPublicKey;
