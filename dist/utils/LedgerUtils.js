@@ -83,6 +83,7 @@ function getTezosPublicKeyOnHidden(derivationPath, device) {
         // }
         // const transport: any = await TransportInstance.getInstance();
         const transport = new Transport(new node_hid_1.default.HID(device));
+        TransportInstance.transport = transport;
         const xtz = new App(transport);
         const result = yield xtz.getAddress(derivationPath, false);
         const hexEncodedPublicKey = result.publicKey;
