@@ -54,8 +54,8 @@ export async function getTezosPublicKey(derivationPath: string): Promise<string>
 export async function getTezosPublicKeyOnHidden(derivationPath: string, device): Promise<string> {
     let transport;
     if (TransportInstance.transport) {
-        TransportInstance.transport = new Transport(new HID.HID(device));
-        transport = TransportInstance.transport;
+        transport = new Transport(new HID.HID(device));
+        TransportInstance.transport = transport;
     } else {
         transport = await TransportInstance.getInstance();
     }

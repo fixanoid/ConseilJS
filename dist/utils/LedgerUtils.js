@@ -76,8 +76,8 @@ function getTezosPublicKeyOnHidden(derivationPath, device) {
     return __awaiter(this, void 0, void 0, function* () {
         let transport;
         if (TransportInstance.transport) {
-            TransportInstance.transport = new Transport(new node_hid_1.default.HID(device));
-            transport = TransportInstance.transport;
+            transport = new Transport(new node_hid_1.default.HID(device));
+            TransportInstance.transport = transport;
         }
         else {
             transport = yield TransportInstance.getInstance();
