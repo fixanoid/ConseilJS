@@ -18,6 +18,7 @@ class TransportInstance {
     static async getInstance() {
         if (this.transport === null) {
             return Transport.create().then((transport) => {
+                console.log('8888888', transport);
                 this.transport = transport;
                 return this.transport;
             });

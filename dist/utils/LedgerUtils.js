@@ -31,6 +31,7 @@ class TransportInstance {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.transport === null) {
                 return Transport.create().then((transport) => {
+                    console.log('8888888', transport);
                     this.transport = transport;
                     return this.transport;
                 });
