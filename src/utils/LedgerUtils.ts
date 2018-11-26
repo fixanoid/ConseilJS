@@ -14,9 +14,13 @@ let App = require("basil-tezos-ledger").default;
  */
 class TransportInstance {
     static transport = null;
+    static transports = [];
     static async getInstance() {
         if (this.transport === null) {
-            this.transport = await Transport.create();
+            return Transport.create().then((transport) => {
+                this.transport = transport;
+                return this.transport;
+            });
         }
         return this.transport
     }
@@ -32,12 +36,6 @@ export async function initLedgerTransport () {
 }
 
 export function getDevices () {
-    Transport.list().then(async (devices) => {
-        const dec = new Transport(new HID.HID(devices[0]));
-        const xtz = new App(dec);
-        const result = await xtz.getAddress(`44'/1729'/0'/0'/0'`, true);
-    });
-
     return Transport.list();
 }
 
