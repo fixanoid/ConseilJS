@@ -1,15 +1,11 @@
 import sodium = require('libsodium-wrappers');
 import * as CryptoUtils from '../utils/CryptoUtils';
-import { config } from '../utils/config';
 import {KeyStore, StoreType} from "../types/KeyStore";
 import {TezosNode} from "./TezosNodeQuery";
 import * as TezosTypes from "./TezosTypes";
 import {Operation} from "./TezosTypes";
 
-let LedgerUtils;
-/// #if !config.isWeb
-    LedgerUtils = require('../utils/LedgerUtils');
-/// #endif
+const LedgerUtils = require('../utils/LedgerUtils');
 
 /**
  *  Functions for sending operations on the Tezos network.

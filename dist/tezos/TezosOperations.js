@@ -19,9 +19,12 @@ const sodium = require("libsodium-wrappers");
 const CryptoUtils = __importStar(require("../utils/CryptoUtils"));
 const KeyStore_1 = require("../types/KeyStore");
 const TezosNodeQuery_1 = require("./TezosNodeQuery");
-let LedgerUtils;
-/// #if !config.isWeb
-LedgerUtils = require('../utils/LedgerUtils');
+
+    let LedgerUtils;
+    // #if !ISWEB
+      LedgerUtils = require('../utils/LedgerUtils');
+    // #endif
+  
 var TezosOperations;
 (function (TezosOperations) {
     /**

@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha --timeout 10000 -r ts-node/register test/*.spec.ts",
-    "packagr": "rm -rf ./dist && tsc",
+    "packagr": "rm -rf ./dist && tsc && node changeNode.js",
     "build": "webpack && rm -rf ./build/dist"
   },
   "repository": {
@@ -53,7 +53,7 @@
     "ts-loader": "^4.3.1",
     "ts-node": "^6.0.5",
     "typedoc": "^0.11.1",
-    "typescript": "^2.8.3",
+    "typescript": "^3.2.2",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "webpack": "^4.11.1",
     "webpack-cli": "^3.0.3"

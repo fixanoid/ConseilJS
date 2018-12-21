@@ -54,7 +54,7 @@ export declare function base58CheckDecode(s: string, prefix: string): Buffer;
  * @param {StoreType} storeType   Type of the generated key store
  * @returns {KeyStore}  Generated keys
  */
-export declare function getKeysFromMnemonicAndPassphrase(mnemonic: string, passphrase: string, pkh: string, checkPKH: boolean, storeType: StoreType): Error | KeyStore;
+export declare function getKeysFromMnemonicAndPassphrase(mnemonic: string, passphrase: string, pkh: string | undefined, checkPKH: boolean | undefined, storeType: StoreType): Error | KeyStore;
 /**
  * Generates a new bip39 mnemonic
  * @returns {string}    Fifteen word mnemonic
