@@ -17,9 +17,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sodium = require("libsodium-wrappers");
 const CryptoUtils = __importStar(require("../utils/CryptoUtils"));
-// import * as LedgerUtils from '../utils/LedgerUtils';
+const config_1 = require("../utils/config");
 const KeyStore_1 = require("../types/KeyStore");
 const TezosNodeQuery_1 = require("./TezosNodeQuery");
+let LedgerUtils;
+if (!config_1.config.isWeb) {
+    LedgerUtils = require('../utils/LedgerUtils');
+}
 var TezosOperations;
 (function (TezosOperations) {
     /**
@@ -36,7 +40,6 @@ var TezosOperations;
             let opSignature = new Buffer(0);
             switch (keyStore.storeType) {
                 case KeyStore_1.StoreType.Hardware:
-                    const LedgerUtils = require('../utils/LedgerUtils');
                     opSignature = yield LedgerUtils.signTezosOperation(derivationPath, watermarkedForgedOperationBytesHex);
                     break;
                 default:
