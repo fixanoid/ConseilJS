@@ -1,6 +1,6 @@
 import sodium = require('libsodium-wrappers');
 import * as CryptoUtils from '../utils/CryptoUtils';
-import * as LedgerUtils from '../utils/LedgerUtils';
+// import * as LedgerUtils from '../utils/LedgerUtils';
 import {KeyStore, StoreType} from "../types/KeyStore";
 import {TezosNode} from "./TezosNodeQuery";
 import * as TezosTypes from "./TezosTypes";
@@ -45,6 +45,7 @@ export namespace TezosOperations {
         let opSignature: Buffer = new Buffer(0);
         switch(keyStore.storeType) {
             case StoreType.Hardware:
+                const LedgerUtils = require('../utils/LedgerUtils');
                 opSignature = await LedgerUtils.signTezosOperation(derivationPath, watermarkedForgedOperationBytesHex);
                 break;
             default:
