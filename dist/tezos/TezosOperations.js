@@ -17,15 +17,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sodium = require("libsodium-wrappers");
 const CryptoUtils = __importStar(require("../utils/CryptoUtils"));
-const config_1 = require("../utils/config");
 const KeyStore_1 = require("../types/KeyStore");
 const TezosNodeQuery_1 = require("./TezosNodeQuery");
 let LedgerUtils;
-if (!config_1.config.isWeb) {
-    Promise.resolve().then(() => __importStar(require("../utils/LedgerUtils"))).then((result) => {
-        LedgerUtils = result;
-    });
-}
+/// #if !config.isWeb
+LedgerUtils = require('../utils/LedgerUtils');
 var TezosOperations;
 (function (TezosOperations) {
     /**

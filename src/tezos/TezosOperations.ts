@@ -7,11 +7,9 @@ import * as TezosTypes from "./TezosTypes";
 import {Operation} from "./TezosTypes";
 
 let LedgerUtils;
-if (!config.isWeb) {
-    import("../utils/LedgerUtils").then((result) => {
-        LedgerUtils = result;
-    });
-}
+/// #if !config.isWeb
+    LedgerUtils = require('../utils/LedgerUtils');
+/// #endif
 
 /**
  *  Functions for sending operations on the Tezos network.
