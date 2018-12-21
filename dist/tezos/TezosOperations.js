@@ -22,7 +22,9 @@ const KeyStore_1 = require("../types/KeyStore");
 const TezosNodeQuery_1 = require("./TezosNodeQuery");
 let LedgerUtils;
 if (!config_1.config.isWeb) {
-    LedgerUtils = require('../utils/LedgerUtils');
+    Promise.resolve().then(() => __importStar(require("../utils/LedgerUtils"))).then((result) => {
+        LedgerUtils = result;
+    });
 }
 var TezosOperations;
 (function (TezosOperations) {

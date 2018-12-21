@@ -8,7 +8,9 @@ import {Operation} from "./TezosTypes";
 
 let LedgerUtils;
 if (!config.isWeb) {
-    LedgerUtils = require('../utils/LedgerUtils');
+    import("../utils/LedgerUtils").then((result) => {
+        LedgerUtils = result;
+    });
 }
 
 /**
