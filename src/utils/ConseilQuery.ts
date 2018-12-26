@@ -1,5 +1,5 @@
 import * as querystring from "querystring";
-import fetch from 'node-fetch';
+import {fetch} from 'whatwg-fetch'
 import {TezosFilter} from "..";
 
 /**

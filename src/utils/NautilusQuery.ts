@@ -1,4 +1,4 @@
-import fetch, {Response} from 'node-fetch';
+import {fetch} from 'whatwg-fetch';
 
 /**
  * Generic functions for running queries against blockchain nodes.
