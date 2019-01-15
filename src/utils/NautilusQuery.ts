@@ -1,4 +1,7 @@
-import fetch, {Response} from 'node-fetch';
+import fetch, {Response} from "node-fetch";
+import debug from "debug";
+
+ const queryDebugLog = debug("conseilJS:query:debug");
 
 /**
  * Generic functions for running queries against blockchain nodes.
@@ -13,13 +16,13 @@ import fetch, {Response} from 'node-fetch';
  */
 export function runGetQuery(server: string, command: string): Promise<object> {
     const url = `${server}/${command}`;
-    console.log(`Querying Tezos node with URL ${url}`);
+    queryDebugLog(`Querying Tezos node with URL ${url}`);
     return fetch(url, {
         method: 'get',
     })
         .then(response => {return response.json()})
         .then(json => {
-            console.log(`Reponse from Tezos node: ${JSON.stringify(json)}`);
+            queryDebugLog(`Reponse from Tezos node: ${JSON.stringify(json)}`);
             return new Promise<Object>(resolve => resolve(json))
         })
 }
@@ -35,7 +38,7 @@ export function runGetQuery(server: string, command: string): Promise<object> {
 export function runPostQuery(server: string, command: string, payload = {}): Promise<Response> {
     const url = `${server}/${command}`;
     const payloadStr = JSON.stringify(payload);
-    console.log(`Querying Tezos node with URL ${url} and payload: ${payloadStr}`);
+    queryDebugLog(`Querying Tezos node with URL ${url} and payload: ${payloadStr}`);
     return fetch(url, {
         method: 'post',
         body: payloadStr,

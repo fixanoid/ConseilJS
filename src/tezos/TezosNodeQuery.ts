@@ -1,6 +1,9 @@
-import * as Nautilus from '../utils/NautilusQuery'
-import * as TezosTypes from './TezosTypes'
+import * as Nautilus from '../utils/NautilusQuery';
+import * as TezosTypes from './TezosTypes';
 import {BlockMetadata} from "./TezosTypes";
+import debug from "debug";
+
+ const queryDebugLog = debug("conseilJS:query:debug");
 
 /**
  * Utility functions for interacting with the Tezos node.
@@ -13,6 +16,7 @@ export namespace TezosNode {
      * @returns {Promise<BlockMetadata>}    Block
      */
     export function getBlock(server: string, hash: string): Promise<BlockMetadata> {
+        queryDebugLog(`Running getBlock Query`);
         return Nautilus.runGetQuery(server, `/chains/main/blocks/${hash}`)
             .then(json => {return <TezosTypes.BlockMetadata> json})
     }
@@ -34,6 +38,7 @@ export namespace TezosNode {
      * @returns {Promise<Account>}  The account
      */
     export function getAccountForBlock(server: string, blockHash: string, accountID: string): Promise<TezosTypes.Account> {
+        queryDebugLog(`Running getAccountForBlock Query`);
         return Nautilus.runGetQuery(server, `/chains/main/blocks/${blockHash}/context/contracts/${accountID}`)
             .then(json => {return <TezosTypes.Account> json})
     }
@@ -46,6 +51,7 @@ export namespace TezosNode {
      * @returns {Promise<ManagerKey>}   The account
      */
     export function getAccountManagerForBlock(server: string, blockHash: string, accountID: string): Promise<TezosTypes.ManagerKey> {
+        queryDebugLog(`Running getAccountManagerForBlock Query`);
         return Nautilus.runGetQuery(server, `/chains/main/blocks/${blockHash}/context/contracts/${accountID}/manager_key`)
             .then(json => {return <TezosTypes.ManagerKey> json})
     }
@@ -59,14 +65,14 @@ export namespace TezosNode {
      * @returns {Promise<string>}  Forged operation
      */
     export async function forgeOperation(server: string, opGroup: object): Promise<string> {
+        queryDebugLog(`Running forgeOperation Query`);
         const response = await Nautilus.runPostQuery(
             server,
             "/chains/main/blocks/head/helpers/forge/operations",
             opGroup
         );
         const forgedOperation = await response.text();
-        console.log('Forged operation:');
-        console.log(forgedOperation);
+        queryDebugLog(`Forge operation >> `, forgedOperation);
         return forgedOperation
             .replace(/\n/g, '')
             //.replace('\"', '')
@@ -80,6 +86,7 @@ export namespace TezosNode {
      * @returns {Promise<AppliedOperation>} Applied operation
      */
     export async function applyOperation(server: string, payload: object): Promise<TezosTypes.AlphaOperationsWithMetadata[]> {
+        queryDebugLog(`Running applyOperation Query`);
         const response  = await Nautilus.runPostQuery(
             server,
             `/chains/main/blocks/head/helpers/preapply/operations`,
@@ -87,8 +94,7 @@ export namespace TezosNode {
         );
         const json = await response.json();
         const appliedOperation =  <TezosTypes.AlphaOperationsWithMetadata[]> json;
-        console.log('Applied operation:');
-        console.log(JSON.stringify(appliedOperation));
+        queryDebugLog(`Applied operation >> `, JSON.stringify(appliedOperation));
         return appliedOperation
     }
 
@@ -99,14 +105,14 @@ export namespace TezosNode {
      * @returns {Promise<InjectedOperation>} Injected operation
      */
     export async function injectOperation(server: string, payload: string): Promise<string> {
+        queryDebugLog(`Running injectOperation Query`);
         const response = await Nautilus.runPostQuery(
             server,
             `injection/operation?chain=main`,
             payload
         );
         const injectedOperation = await response.text();
-        console.log('Injected operation');
-        console.log(">>", injectedOperation);
+        queryDebugLog(`Injected operation >> `, injectedOperation);
         return injectedOperation
     }
 }

@@ -1,4 +1,7 @@
-import * as sodium from 'libsodium-wrappers-sumo';
+import * as sodium from "libsodium-wrappers-sumo";
+import debug from "debug";
+
+const queryDebugLog = debug("conseilJS:ledger:debug");
 
 /**
  * These two lines allow us to interface with Ledgerjs and use their transport
@@ -49,7 +52,7 @@ export async function getTezosPublicKey(derivationPath: string): Promise<string>
  * @param watermarkedOpInHex Operation
  */
 export async function signTezosOperation(derivationPath: string, watermarkedOpInHex: string): Promise<Buffer> {
-    console.log('Signing using Ledger..');
+    queryDebugLog(`Signing using Ledger..`);
     const transport = await TransportInstance.getInstance();
     const xtz = new App(transport);
     const result = await xtz.signOperation(derivationPath, watermarkedOpInHex);

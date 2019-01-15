@@ -14,8 +14,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const Nautilus = __importStar(require("../utils/NautilusQuery"));
+const debug_1 = __importDefault(require("debug"));
+const queryDebugLog = debug_1.default("conseilJS:query:debug");
 /**
  * Utility functions for interacting with the Tezos node.
  */
@@ -28,6 +33,7 @@ var TezosNode;
      * @returns {Promise<BlockMetadata>}    Block
      */
     function getBlock(server, hash) {
+        queryDebugLog(`Running getBlock Query`);
         return Nautilus.runGetQuery(server, `/chains/main/blocks/${hash}`)
             .then(json => { return json; });
     }
@@ -49,6 +55,7 @@ var TezosNode;
      * @returns {Promise<Account>}  The account
      */
     function getAccountForBlock(server, blockHash, accountID) {
+        queryDebugLog(`Running getAccountForBlock Query`);
         return Nautilus.runGetQuery(server, `/chains/main/blocks/${blockHash}/context/contracts/${accountID}`)
             .then(json => { return json; });
     }
@@ -61,6 +68,7 @@ var TezosNode;
      * @returns {Promise<ManagerKey>}   The account
      */
     function getAccountManagerForBlock(server, blockHash, accountID) {
+        queryDebugLog(`Running getAccountManagerForBlock Query`);
         return Nautilus.runGetQuery(server, `/chains/main/blocks/${blockHash}/context/contracts/${accountID}/manager_key`)
             .then(json => { return json; });
     }
@@ -73,10 +81,10 @@ var TezosNode;
      */
     function forgeOperation(server, opGroup) {
         return __awaiter(this, void 0, void 0, function* () {
+            queryDebugLog(`Running forgeOperation Query`);
             const response = yield Nautilus.runPostQuery(server, "/chains/main/blocks/head/helpers/forge/operations", opGroup);
             const forgedOperation = yield response.text();
-            console.log('Forged operation:');
-            console.log(forgedOperation);
+            queryDebugLog(`Forge operation >> `, forgedOperation);
             return forgedOperation
                 .replace(/\n/g, '')
                 //.replace('\"', '')
@@ -92,11 +100,11 @@ var TezosNode;
      */
     function applyOperation(server, payload) {
         return __awaiter(this, void 0, void 0, function* () {
+            queryDebugLog(`Running applyOperation Query`);
             const response = yield Nautilus.runPostQuery(server, `/chains/main/blocks/head/helpers/preapply/operations`, payload);
             const json = yield response.json();
             const appliedOperation = json;
-            console.log('Applied operation:');
-            console.log(JSON.stringify(appliedOperation));
+            queryDebugLog(`Applied operation >> `, JSON.stringify(appliedOperation));
             return appliedOperation;
         });
     }
@@ -109,10 +117,10 @@ var TezosNode;
      */
     function injectOperation(server, payload) {
         return __awaiter(this, void 0, void 0, function* () {
+            queryDebugLog(`Running injectOperation Query`);
             const response = yield Nautilus.runPostQuery(server, `injection/operation?chain=main`, payload);
             const injectedOperation = yield response.text();
-            console.log('Injected operation');
-            console.log(">>", injectedOperation);
+            queryDebugLog(`Injected operation >> `, injectedOperation);
             return injectedOperation;
         });
     }

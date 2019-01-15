@@ -1,6 +1,9 @@
 import * as querystring from "querystring";
-import fetch from 'node-fetch';
+import fetch from "node-fetch";
 import {TezosFilter} from "..";
+import debug from "debug";
+
+const queryDebugLog = debug("conseilJS:query:debug");
 
 /**
  * Utility functions for querying backend Conseil API
@@ -16,7 +19,7 @@ import {TezosFilter} from "..";
  */
 export function queryConseilServer(server: string, route: string, apiKey: string): Promise<object> {
     const url = `${server}/${route}`;
-    console.log(`Querying Conseil server at URL ${url}`);
+    queryDebugLog(`Querying Conseil server at URL ${url}`);
     return fetch(url, {
         method: 'get',
         headers: {

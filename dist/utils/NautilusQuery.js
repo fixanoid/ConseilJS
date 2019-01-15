@@ -4,6 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const node_fetch_1 = __importDefault(require("node-fetch"));
+const debug_1 = __importDefault(require("debug"));
+const queryDebugLog = debug_1.default("conseilJS:query:debug");
 /**
  * Generic functions for running queries against blockchain nodes.
  */
@@ -16,13 +18,13 @@ const node_fetch_1 = __importDefault(require("node-fetch"));
  */
 function runGetQuery(server, command) {
     const url = `${server}/${command}`;
-    console.log(`Querying Tezos node with URL ${url}`);
+    queryDebugLog(`Querying Tezos node with URL ${url}`);
     return node_fetch_1.default(url, {
         method: 'get',
     })
         .then(response => { return response.json(); })
         .then(json => {
-        console.log(`Reponse from Tezos node: ${JSON.stringify(json)}`);
+        queryDebugLog(`Reponse from Tezos node: ${JSON.stringify(json)}`);
         return new Promise(resolve => resolve(json));
     });
 }
@@ -38,7 +40,7 @@ exports.runGetQuery = runGetQuery;
 function runPostQuery(server, command, payload = {}) {
     const url = `${server}/${command}`;
     const payloadStr = JSON.stringify(payload);
-    console.log(`Querying Tezos node with URL ${url} and payload: ${payloadStr}`);
+    queryDebugLog(`Querying Tezos node with URL ${url} and payload: ${payloadStr}`);
     return node_fetch_1.default(url, {
         method: 'post',
         body: payloadStr,

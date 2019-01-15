@@ -14,8 +14,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const sodium = __importStar(require("libsodium-wrappers-sumo"));
+const debug_1 = __importDefault(require("debug"));
+const queryDebugLog = debug_1.default("conseilJS:ledger:debug");
 /**
  * These two lines allow us to interface with Ledgerjs and use their transport
  * layer code
@@ -66,7 +71,7 @@ exports.getTezosPublicKey = getTezosPublicKey;
  */
 function signTezosOperation(derivationPath, watermarkedOpInHex) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('Signing using Ledger..');
+        queryDebugLog(`Signing using Ledger..`);
         const transport = yield TransportInstance.getInstance();
         const xtz = new App(transport);
         const result = yield xtz.signOperation(derivationPath, watermarkedOpInHex);

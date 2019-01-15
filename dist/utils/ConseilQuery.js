@@ -12,6 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const querystring = __importStar(require("querystring"));
 const node_fetch_1 = __importDefault(require("node-fetch"));
+const debug_1 = __importDefault(require("debug"));
+const queryDebugLog = debug_1.default("conseilJS:query:debug");
 /**
  * Utility functions for querying backend Conseil API
  */
@@ -25,7 +27,7 @@ const node_fetch_1 = __importDefault(require("node-fetch"));
  */
 function queryConseilServer(server, route, apiKey) {
     const url = `${server}/${route}`;
-    console.log(`Querying Conseil server at URL ${url}`);
+    queryDebugLog(`Querying Conseil server at URL ${url}`);
     return node_fetch_1.default(url, {
         method: 'get',
         headers: {
