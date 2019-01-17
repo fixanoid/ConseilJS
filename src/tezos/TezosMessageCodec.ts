@@ -18,7 +18,7 @@ const operationTypes: Array<string> = [
 export namespace TezosMessageCodec {
   /**
    * Parse operation type from a bounded hex string and translate to enum.
-   * @param {string} hex 
+   * @param {string} hex
    */
   export function getOperationType(hex: string) {
     return operationTypes[TezosMessageUtils.readInt(hex)];
@@ -282,7 +282,8 @@ export namespace TezosMessageCodec {
     const origination: Operation = {
       kind: "origination",
       source: source,
-      managerPubkey: publickeyhash,
+      //managerPubkey: publickeyhash, //mainnet and alphanet
+      manager_pubkey: publickeyhash, // zeronet
       balance: balanceInfo.value + "",
       spendable: spendable,
       delegatable: delegatable,

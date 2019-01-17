@@ -245,7 +245,8 @@ var TezosMessageCodec;
         const origination = {
             kind: "origination",
             source: source,
-            managerPubkey: publickeyhash,
+            //managerPubkey: publickeyhash, //mainnet and alphanet
+            manager_pubkey: publickeyhash,
             balance: balanceInfo.value + "",
             spendable: spendable,
             delegatable: delegatable,
